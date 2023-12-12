@@ -2,20 +2,18 @@ GET http://localhost:3000/prefix/test
 ###
 GET http://localhost:3000/categories
 ###
-GET http://localhost:3000/categories/4
+GET http://localhost:3000/categories/2
 ###
 POST http://localhost:3000/categories
-Content-Type: application/json
+content-type: application/json
 {
-    "name": "Category test",
-    "description:": "Description test"
+    "name": "Leitura"
 }
 ###
-PATCH http://localhost:3000/categories
+PATCH http://localhost:3000/categories/4
 Content-Type: application/json
 {
-    "name": "Category test",
-    "description:": "Description test"
+    "name": "Material escolar"
 }
 ### 
-DELETE http://localhost:3000/categories/1
+DELETE http://localhost:3000/categories/4
