@@ -7,8 +7,8 @@ import { PrismaService } from 'src/prisma/prisma/prisma.service';
 export class CategoriesService {
   constructor(private prismaService: PrismaService) {}
 
-  async create(createCategoryDto: CreateCategoryDto) {
-    return await this.prismaService.category.create({
+  create(createCategoryDto: CreateCategoryDto) {
+    return this.prismaService.category.create({
       data: createCategoryDto
     });
   }
