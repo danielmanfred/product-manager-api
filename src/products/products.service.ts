@@ -30,8 +30,11 @@ export class ProductsService {
     return this.prismaService.product.findUniqueOrThrow({ where: { id } });
   }
 
-  calculateValueInstallments(productId: number, interest: number, installments: number) {
-    
+  async calculateValueInstallments(productId: number, interest: number, installments: number) {
+    const interestRate = interest / 100
+    const product = await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
+
+    return product.price * interestRate / (1 - Math.pow(1 + interestRate, -installments))
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
