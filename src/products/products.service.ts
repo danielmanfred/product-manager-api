@@ -30,6 +30,10 @@ export class ProductsService {
     return this.prismaService.product.findUniqueOrThrow({ where: { id } });
   }
 
+  calculateValueInstallments(productId: number, interest: number, installments: number) {
+    
+  }
+
   update(id: number, updateProductDto: UpdateProductDto) {
     return this.prismaService.product.update({
       where: { id },
