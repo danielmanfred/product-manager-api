@@ -8,6 +8,7 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
     @MaxLength(255)
     @IsString()
     @IsNotEmpty()
+    @IsOptional()
     name: string;
 
     @ApiProperty({ type: 'string' })
@@ -19,11 +20,13 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
     @ApiProperty()
     @IsNotEmpty()
     @IsNumber()
+    @IsOptional()
     price: number;
 
     @ApiProperty()
     @Min(1)
     @IsInt()
     @IsNotEmpty()
+    @IsOptional()
     category_id: number;
 }

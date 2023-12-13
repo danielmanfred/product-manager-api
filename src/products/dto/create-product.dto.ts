@@ -11,7 +11,6 @@ export class CreateProductDto {
     @ApiProperty({ type: 'string' })
     @MaxLength(255)
     @IsString()
-    @IsOptional()
     description: string | null;
 
     @ApiProperty()
