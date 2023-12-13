@@ -13,6 +13,7 @@ datasource db {
 model Category {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
+  products Product[]
 }
 
 model Product {
@@ -20,5 +21,6 @@ model Product {
   name String @db.VarChar(255)
   description String? @db.Text
   price Float
-  idCategory Int?
+  category Category @relation(fields: [category_id], references: [id])
+  category_id Int
 }
