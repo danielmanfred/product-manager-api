@@ -2,10 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { PrismaService } from '../prisma/prisma/prisma.service';
 import { BadRequestException } from '@nestjs/common';
+import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
 
 describe('ProductsService', () => {
   let service: ProductsService;
-  let prismaService: PrismaService 
+  let prismaService: PrismaService;
+  let mockData: CalculateValueInstallmentsDto;
 
   beforeEach(async () => {
     const prismaServiceMock = {
@@ -20,6 +22,12 @@ describe('ProductsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ProductsService, { provide: PrismaService, useFactory: () => prismaServiceMock }],
     }).compile();
+
+    mockData = {
+      productId: 1,
+      interest: 5,
+      installments: 10
+    } as CalculateValueInstallmentsDto;
 
     service = module.get<ProductsService>(ProductsService);
     prismaService = module.get<PrismaService>(PrismaService);
@@ -41,32 +49,20 @@ describe('ProductsService', () => {
     })
 
     xit('should be resolves if called with valid params', async () => {
-      const result = await service.calculateValueInstallments({
-        productId: 1,
-        interest: 5,
-        installments: 10
-      });
+      const result = await service.calculateValueInstallments(mockData);
 
       expect(result).resolves.not.toThrow();
     })
 
     xit('should be throw when findUniqueOrThrow throw', async () => {
       (prismaService.product.findFirstOrThrow as jest.Mock).mockRejectedValue(new Error());
-      await service.calculateValueInstallments({
-        productId: 1,
-        interest: 5,
-        installments: 10
-      });
+      await service.calculateValueInstallments(mockData);
 
       expect(prismaService.product.findUniqueOrThrow).rejects.toThrow();
     });
 
     it('should be return calculate value', async () => {
-      const result = await service.calculateValueInstallments({
-        productId: 1,
-        interest: 5,
-        installments: 10
-      });
+      const result = await service.calculateValueInstallments(mockData);
 
       expect(result).toEqual('453.27')
     });
