@@ -23,19 +23,9 @@ export class ProductsController {
     return this.productsService.findOne(+id);
   }
 
-  @Get()
+  @Get('calculateValueInstallments')
   calculateValueInstallments(@Req() request: Request, @Res() response: Response) {
-    const { productId, interest, installments } = request.query
-
-    if (!productId || !interest || !installments) {
-      return response.status(400).send({
-        message: 'Missing productId or interest or installments query perameter'
-      })
-    }
-
-    const calculatedValue = this.productsService.calculateValueInstallments(+productId, +interest, +installments)
-
-    return response.status(200).send(calculatedValue)
+    
   }
 
   @Patch(':id')

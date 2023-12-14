@@ -28,3 +28,5 @@ Content-Type: application/json
     "price": 3059.10,
     "category_id": 1
 }
+###
+GET http://localhost:3000/products/calculateValueInstallments?productId=1&interest=5&installments=10

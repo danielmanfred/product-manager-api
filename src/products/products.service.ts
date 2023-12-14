@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from './../prisma/prisma/prisma.service';
 import { InvalidRalationError } from './../errors/invalid-relation.error';
+import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
 
 @Injectable()
 export class ProductsService {
@@ -30,10 +31,16 @@ export class ProductsService {
     return this.prismaService.product.findUniqueOrThrow({ where: { id } });
   }
 
-  async calculateValueInstallments(productId: number, interest: number, installments: number) {
-    const interestRate = interest / 100
-    const product = await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
+  async calculateValueInstallments(data: CalculateValueInstallmentsDto): Promise<number> {
+    const { productId, interest, installments } = data
 
+    if (productId <= 0 || interest < 0 || installments <= 0) {
+      throw new BadRequestException();
+    }
+
+    const interestRate = interest / 100
+    const product = { price: 1550.00 }
+    //await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
     return product.price * interestRate / (1 - Math.pow(1 + interestRate, -installments))
   }
 
