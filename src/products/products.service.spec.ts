@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { PrismaService } from '../prisma/prisma/prisma.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
 
 describe('ProductsService', () => {
   let service: ProductsService;
   let prismaService: PrismaService;
-  let mockData: CalculateValueInstallmentsDto;
 
   beforeEach(async () => {
     const prismaServiceMock = {
@@ -23,12 +22,6 @@ describe('ProductsService', () => {
       providers: [ProductsService, { provide: PrismaService, useFactory: () => prismaServiceMock }],
     }).compile();
 
-    mockData = {
-      productId: 1,
-      interest: 5,
-      installments: 10
-    } as CalculateValueInstallmentsDto;
-
     service = module.get<ProductsService>(ProductsService);
     prismaService = module.get<PrismaService>(PrismaService);
   });
@@ -38,6 +31,16 @@ describe('ProductsService', () => {
   });
 
   describe('calculateValueInstallments()', () => {
+    let mockData: CalculateValueInstallmentsDto;
+
+    beforeEach(() => {
+      mockData = {
+        productId: 1,
+        interest: 5,
+        installments: 10
+      } as CalculateValueInstallmentsDto;
+    })
+
     it('should be throw if called with invalid params', async () => {
       const result = service.calculateValueInstallments({
         productId: 0,
@@ -46,19 +49,17 @@ describe('ProductsService', () => {
       });
 
       await expect(result).rejects.toThrow(new BadRequestException());
-    })
+    });
 
-    xit('should be resolves if called with valid params', async () => {
-      const result = await service.calculateValueInstallments(mockData);
+    it('should be called repository with correct params', async () => {
+      service.calculateValueInstallments(mockData);
+      expect(prismaService.product.findUniqueOrThrow).toHaveBeenCalledWith({ where: { id: mockData.productId }});
+    });
 
-      expect(result).resolves.not.toThrow();
-    })
+    it('should be not thorw if repository return successfully', async () => {
+      const result = service.calculateValueInstallments(mockData);
 
-    xit('should be throw when findUniqueOrThrow throw', async () => {
-      (prismaService.product.findFirstOrThrow as jest.Mock).mockRejectedValue(new Error());
-      await service.calculateValueInstallments(mockData);
-
-      expect(prismaService.product.findUniqueOrThrow).rejects.toThrow();
+      await expect(result).resolves.not.toThrow();
     });
 
     it('should be return calculate value', async () => {
