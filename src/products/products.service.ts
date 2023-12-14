@@ -31,19 +31,6 @@ export class ProductsService {
     return this.prismaService.product.findUniqueOrThrow({ where: { id } });
   }
 
-  async calculateValueInstallments(data: CalculateValueInstallmentsDto): Promise<number> {
-    const { productId, interest, installments } = data
-
-    if (productId <= 0 || interest < 0 || installments <= 0) {
-      throw new BadRequestException();
-    }
-
-    const interestRate = interest / 100
-    const product = { price: 1550.00 }
-    //await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
-    return product.price * interestRate / (1 - Math.pow(1 + interestRate, -installments))
-  }
-
   update(id: number, updateProductDto: UpdateProductDto) {
     return this.prismaService.product.update({
       where: { id },
@@ -53,5 +40,21 @@ export class ProductsService {
 
   remove(id: number) {
     return this.prismaService.product.delete({ where: { id }});
+  }
+
+  async calculateValueInstallments(data: CalculateValueInstallmentsDto): Promise<string> {
+    const { productId, interest, installments } = data
+
+    if (productId <= 0 || interest < 0 || installments <= 0) {
+      throw new BadRequestException();
+    }
+
+    try {
+      const interestRate = interest / 100;
+      const product = await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
+      return (product.price * interestRate / (1 - Math.pow(1 + interestRate, -installments))).toFixed(2);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
