@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+REST API to manager products built with Nest and Postgres.
 
 ## Installation
 
@@ -45,6 +45,19 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Steps to run the application
+
+```bash
+# run docker compose
+$ sudo docker compose up
+
+# run the application in development environment
+$ npm run start:dev
+
+# run the application in prod environment
+$ sudo docker build -t dockernode .
+```
+
 ## Test
 
 ```bash
@@ -57,6 +70,10 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Access to documentation
+[docs](http://localhost:3000/api)
+
 
 ## Support
 
