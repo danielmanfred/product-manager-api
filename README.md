@@ -71,8 +71,8 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Access to documentation
-[docs](http://localhost:3000/api)
+## Documentation
+[documentation access link](http://localhost:3000/api)
 
 
 ## Support
