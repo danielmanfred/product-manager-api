@@ -3,8 +3,9 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -36,7 +37,9 @@ export class ProductsController {
   }
 
   @ApiBody({ type: [CalculateValueInstallmentsDto]})
-  @Get('/calculateValueInstallments/:id')
+  @ApiResponse({ status: 200, description: 'Value of installments' })
+  @ApiResponse({ status: 422, description: 'Unprocessable Entity' })
+  @Get(':id/calculateValueInstallments')
   async calculateValueInstallments(@Param('id') id: string, @Body() data: CalculateValueInstallmentsDto): Promise<{ valueInstallments: string }> {
     const valueInstallments = await this.productsService.calculateValueInstallments(+id, data);
     return { valueInstallments };

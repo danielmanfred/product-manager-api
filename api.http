@@ -29,7 +29,7 @@ Content-Type: application/json
     "category_id": 1
 }
 ###
-GET http://localhost:3000/products/calculateValueInstallments/1
+GET http://localhost:3000/products/1/calculateValueInstallments
 Content-Type: application/json
 {
     "interest": 5,

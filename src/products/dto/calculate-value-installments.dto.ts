@@ -5,6 +5,7 @@ export class CalculateValueInstallmentsDto {
     @ApiProperty({ 
         description: 'Porcentagem do juros dividido por 100',
         minimum: 0.1,
+        example: 5,
         type: Number
     })
     @IsNumber()
@@ -15,6 +16,7 @@ export class CalculateValueInstallmentsDto {
     @ApiProperty({
         description: 'Número de parcelas',
         minimum: 2,
+        example: 10,
         type: Number
     })
     @IsInt()
