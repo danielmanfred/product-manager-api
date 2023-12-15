@@ -26,6 +26,16 @@
 
 REST API to manager products built with Nest and Postgres.
 
+## Technologies used in this project
+- Node.js
+- Nest.js (framework)
+- Postgres (database)
+- Prisma (ORM)
+- Swagger (documantation)
+- Jest (unit testing)
+
+REST API to manager products built with Nest and Postgres.
+
 ## Installation
 
 ```bash
