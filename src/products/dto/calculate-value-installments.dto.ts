@@ -4,8 +4,8 @@ import { Type } from "class-transformer";
 
 export class CalculateValueInstallmentsDto {
     @Type(() => Number)
-    @ApiProperty({ 
-        description: 'Interest percentage divided by 100',
+    @ApiProperty({
+        description: 'Interest percentage',
         minimum: 0.1,
         example: 5,
         type: Number
