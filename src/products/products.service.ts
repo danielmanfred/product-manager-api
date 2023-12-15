@@ -42,15 +42,15 @@ export class ProductsService {
     return this.prismaService.product.delete({ where: { id }});
   }
 
-  async calculateValueInstallments(data: CalculateValueInstallmentsDto): Promise<string> {
-    const { productId, interest, installments } = data
+  async calculateValueInstallments(id: number, data: CalculateValueInstallmentsDto): Promise<string> {
+    const { interest, installments } = data
 
-    if (productId <= 0 || interest < 0 || installments <= 0) {
-      throw new BadRequestException();
+    if (interest < 0.01 || installments < 2) {
+      throw new BadRequestException('Interest or installments are invalid');
     }
 
     const interestRate = interest / 100;
-    const product = await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
+    const product = await this.prismaService.product.findUniqueOrThrow({ where: { id }});
     return (product.price * interestRate / (1 - Math.pow(1 + interestRate, -installments))).toFixed(2);
   }
 }

@@ -3,7 +3,7 @@ import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { PrismaService } from '../prisma/prisma/prisma.service';
 import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('ProductsController', () => {
   let controller: ProductsController;
@@ -32,21 +32,38 @@ describe('ProductsController', () => {
   });
 
   describe('calculateValueInstallments()', () => {
-    it('should throw when service throws', async () => {
+    let mockData: CalculateValueInstallmentsDto;
+    const id = '1';
+
+    beforeEach(() => {
+      mockData = {
+        interest: 5,
+        installments: 10
+      } as CalculateValueInstallmentsDto;
+    })
+
+    it('should throw when service fail', async () => {
       (service.calculateValueInstallments as jest.Mock).mockRejectedValue(new BadRequestException());
-      await expect(controller.calculateValueInstallments(0,0,0)).rejects.toThrow(new BadRequestException());
+      await expect(controller.calculateValueInstallments(id, {} as CalculateValueInstallmentsDto)).rejects.toThrow(new BadRequestException());
+    });
+
+    it('should return Not Found Exception if product was not found', async () => {
+      (service.calculateValueInstallments as jest.Mock).mockRejectedValue(new NotFoundException())
+      const result = controller.calculateValueInstallments(id, mockData);
+      await expect(result).rejects.toThrow(new NotFoundException());
     });
 
     it('should call the service with correct params', async () => {
-      await controller.calculateValueInstallments(1,5,10);
-      expect(service.calculateValueInstallments).toHaveBeenCalledWith({
-        productId: 1, interest: 5, installments: 10
+      await controller.calculateValueInstallments(id, mockData);
+      expect(service.calculateValueInstallments).toHaveBeenCalledWith(+id, { 
+        interest: 5, 
+        installments: 10
       } as CalculateValueInstallmentsDto);
     });
 
     it('should calculate and return the correctly value', async () => {
-      const result = await controller.calculateValueInstallments(1,5,10);
-      expect(result).toEqual('453.27');
+      const result = await controller.calculateValueInstallments(id, mockData);
+      expect(result).toEqual({ valueInstallments: '453.27' });
     });
   });
 });

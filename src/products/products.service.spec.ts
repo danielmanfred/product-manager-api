@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { PrismaService } from '../prisma/prisma/prisma.service';
-import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
 
 describe('ProductsService', () => {
@@ -17,7 +17,7 @@ describe('ProductsService', () => {
         price: 3500,
         category_id: 1
       }) }
-    }
+    };
     const module: TestingModule = await Test.createTestingModule({
       providers: [ProductsService, { provide: PrismaService, useFactory: () => prismaServiceMock }],
     }).compile();
@@ -32,38 +32,37 @@ describe('ProductsService', () => {
 
   describe('calculateValueInstallments()', () => {
     let mockData: CalculateValueInstallmentsDto;
+    const id = 1;
 
     beforeEach(() => {
       mockData = {
-        productId: 1,
         interest: 5,
         installments: 10
       } as CalculateValueInstallmentsDto;
     })
 
     it('should be throw if called with invalid params', async () => {
-      const result = service.calculateValueInstallments({
-        productId: 0,
-        interest: -1,
+      const result = service.calculateValueInstallments(id, {
+        interest: 0,
         installments: 0
       });
 
-      await expect(result).rejects.toThrow(new BadRequestException());
+      await expect(result).rejects.toThrow(new BadRequestException('Interest or installments are invalid'));
     });
 
     it('should be called repository with correct params', async () => {
-      service.calculateValueInstallments(mockData);
-      expect(prismaService.product.findUniqueOrThrow).toHaveBeenCalledWith({ where: { id: mockData.productId }});
+      service.calculateValueInstallments(id, mockData);
+      expect(prismaService.product.findUniqueOrThrow).toHaveBeenCalledWith({ where: { id }});
     });
 
     it('should be not throw if repository return successfully', async () => {
-      const result = service.calculateValueInstallments(mockData);
+      const result = service.calculateValueInstallments(id, mockData);
 
       await expect(result).resolves.not.toThrow();
     });
 
     it('should return the correct calculate value', async () => {
-      const result = await service.calculateValueInstallments(mockData);
+      const result = await service.calculateValueInstallments(id, mockData);
 
       expect(result).toEqual('453.27')
     });

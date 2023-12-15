@@ -25,8 +25,13 @@ Content-Type: application/json
 {
     "name": "Notebook Dell",
     "description": "Inspiron 3000 Intel Core i5 16GB",
-    "price": 3059.10,
+    "price": 3059.1,
     "category_id": 1
 }
 ###
-GET http://localhost:3000/products/calculateValueInstallments?productId=1&interest=5&installments=10
+GET http://localhost:3000/products/calculateValueInstallments/1
+Content-Type: application/json
+{
+    "interest": 5,
+    "installments": 10
+}

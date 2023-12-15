@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Request, Response } from 'express';
+import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('products')
 export class ProductsController {
@@ -15,6 +16,7 @@ export class ProductsController {
 
   @Get()
   findAll() {
+    console.log('Why is falling here???')
     return this.productsService.findAll();
   }
 
@@ -33,12 +35,10 @@ export class ProductsController {
     return this.productsService.remove(+id);
   }
 
-  @Get('/:productId/:interest/:installments')
-  async calculateValueInstallments(
-    @Param('productId') productId: number,
-    @Param('interest') interest: number, 
-    @Param('installments') installments: number
-  ): Promise<string> {
-    return await this.productsService.calculateValueInstallments({ productId, interest, installments });
+  @ApiBody({ type: [CalculateValueInstallmentsDto]})
+  @Get('/calculateValueInstallments/:id')
+  async calculateValueInstallments(@Param('id') id: string, @Body() data: CalculateValueInstallmentsDto): Promise<{ valueInstallments: string }> {
+    const valueInstallments = await this.productsService.calculateValueInstallments(+id, data);
+    return { valueInstallments };
   }
 }
