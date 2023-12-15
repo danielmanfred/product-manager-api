@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CalculateValueInstallmentsDto } from './dto/calculate-value-installments.dto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('products')
 @Controller('products')
@@ -17,7 +17,6 @@ export class ProductsController {
 
   @Get()
   findAll() {
-    console.log('Why is falling here???')
     return this.productsService.findAll();
   }
 
@@ -36,12 +35,11 @@ export class ProductsController {
     return this.productsService.remove(+id);
   }
 
-  @ApiBody({ type: [CalculateValueInstallmentsDto]})
   @ApiResponse({ status: 200, description: 'Value of installments' })
   @ApiResponse({ status: 422, description: 'Unprocessable Entity' })
   @Get(':id/calculateValueInstallments')
-  async calculateValueInstallments(@Param('id') id: string, @Body() data: CalculateValueInstallmentsDto): Promise<{ valueInstallments: string }> {
-    const valueInstallments = await this.productsService.calculateValueInstallments(+id, data);
+  async calculateValueInstallments(@Param('id') id: string, @Query() query: CalculateValueInstallmentsDto): Promise<{ valueInstallments: string }> {
+    const valueInstallments = await this.productsService.calculateValueInstallments(+id, query);
     return { valueInstallments };
   }
 }

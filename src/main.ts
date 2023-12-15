@@ -13,7 +13,10 @@ async function bootstrap() {
     new InvalidRelationExceptionFilter()
   );
 
-  app.useGlobalPipes(new ValidationPipe({ errorHttpStatusCode: 422 }));
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    errorHttpStatusCode: 422
+  }));
 
   const config = new DocumentBuilder()
     .setTitle('Product Manager API')

@@ -1,9 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsInt, IsNotEmpty, Min, IsString, IsOptional } from "class-validator";
+import { IsNumber, IsInt, IsNotEmpty, Min } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CalculateValueInstallmentsDto {
+    @Type(() => Number)
     @ApiProperty({ 
-        description: 'Porcentagem do juros dividido por 100',
+        description: 'Interest percentage divided by 100',
         minimum: 0.1,
         example: 5,
         type: Number
@@ -11,10 +13,11 @@ export class CalculateValueInstallmentsDto {
     @IsNumber()
     @IsNotEmpty()
     @Min(0.1)
-    interest: number;
+    readonly interest: number;
 
+    @Type(() => Number)
     @ApiProperty({
-        description: 'Número de parcelas',
+        description: 'Number of installments',
         minimum: 2,
         example: 10,
         type: Number
@@ -22,5 +25,5 @@ export class CalculateValueInstallmentsDto {
     @IsInt()
     @Min(2)
     @IsNotEmpty()
-    installments: number;
+    readonly installments: number;
 }
