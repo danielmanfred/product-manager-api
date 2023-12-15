@@ -11,3 +11,5 @@ services:
       - ./data:/data/postgres
     ports:
       - "5434:5432"
+volumes:
+  data: {}

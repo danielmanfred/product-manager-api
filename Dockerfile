@@ -1,13 +1,12 @@
-FROM node:alpine
+FROM node:18-alpine
 
-WORKDIR /usr/app
-
-COPY package* ./
-
-RUN npm install
+WORKDIR /usr/src/app
 
 COPY . .
 
+RUN npm install
+RUN npm build
+
 EXPOSE 3000
 
-CMD [ "npm", "start:prod" ]
+CMD [ "npm", "run", "start:prod" ]
