@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from './../prisma/prisma/prisma.service';
@@ -49,12 +49,8 @@ export class ProductsService {
       throw new BadRequestException();
     }
 
-    try {
-      const interestRate = interest / 100;
-      const product = await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
-      return (product.price * interestRate / (1 - Math.pow(1 + interestRate, -installments))).toFixed(2);
-    } catch (error) {
-      throw new InternalServerErrorException(error);
-    }
+    const interestRate = interest / 100;
+    const product = await this.prismaService.product.findUniqueOrThrow({ where: { id: productId }});
+    return (product.price * interestRate / (1 - Math.pow(1 + interestRate, -installments))).toFixed(2);
   }
 }

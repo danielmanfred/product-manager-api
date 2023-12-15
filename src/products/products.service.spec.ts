@@ -56,13 +56,13 @@ describe('ProductsService', () => {
       expect(prismaService.product.findUniqueOrThrow).toHaveBeenCalledWith({ where: { id: mockData.productId }});
     });
 
-    it('should be not thorw if repository return successfully', async () => {
+    it('should be not throw if repository return successfully', async () => {
       const result = service.calculateValueInstallments(mockData);
 
       await expect(result).resolves.not.toThrow();
     });
 
-    it('should be return calculate value', async () => {
+    it('should return the correct calculate value', async () => {
       const result = await service.calculateValueInstallments(mockData);
 
       expect(result).toEqual('453.27')

@@ -23,11 +23,6 @@ export class ProductsController {
     return this.productsService.findOne(+id);
   }
 
-  @Get('calculateValueInstallments')
-  calculateValueInstallments(@Req() request: Request, @Res() response: Response) {
-    
-  }
-
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(+id, updateProductDto);
@@ -36,5 +31,14 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
+  }
+
+  @Get('/:productId/:interest/:installments')
+  async calculateValueInstallments(
+    @Param('productId') productId: number,
+    @Param('interest') interest: number, 
+    @Param('installments') installments: number
+  ): Promise<string> {
+    return await this.productsService.calculateValueInstallments({ productId, interest, installments });
   }
 }
