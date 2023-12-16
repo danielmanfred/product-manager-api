@@ -66,6 +66,9 @@ $ npm run start:dev
 
 # run the application in prod environment
 $ sudo docker build -t dockernode .
+
+# run the migrations
+$ npx prisma migrate dev
 ```
 
 ## Test
